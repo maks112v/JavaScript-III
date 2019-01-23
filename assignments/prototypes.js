@@ -41,6 +41,25 @@ CharacterStats.prototype = Object.create(GameObject.prototype);
 CharacterStats.prototype.takeDamage =  function(){
   return `${this.name} took damage.`;
 }
+
+CharacterStats.prototype.celebrate = function(){
+  return `${this.name} HAS WON!`;
+}
+
+CharacterStats.prototype.dealDamage =  function(dealTo, amount, criticalHit){
+  this.healthPoints = this.healthPoints - amount;
+  if(this.healthPoints > 0){
+    if(criticalHit){
+      console.error(`${this.name} takes a critial hit ${amount} damage and has ${this.healthPoints} health left.`);
+    }
+    else{
+      console.log(`${this.name} takes ${amount} damage and has ${this.healthPoints} health left.`);
+    }
+  }
+  else {
+    console.log(`${this.name} has died.`);
+  }
+}
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
   * team
@@ -61,7 +80,7 @@ function Humanoid(user){
 Humanoid.prototype = Object.create(CharacterStats.prototype);
 
 Humanoid.prototype.greet =  function(){
-  return `${this.name} offers a greeting in ${this.language}`;
+  return `${this.name} offers a greeting in ${this.language}.`;
 }
 
 
@@ -123,16 +142,16 @@ Humanoid.prototype.greet =  function(){
     language: 'Elvish',
   });
 
-  console.log(mage.createdAt); // Today's date
-  console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
-  console.log(swordsman.healthPoints); // 15
-  console.log(mage.name); // Bruce
-  console.log(swordsman.team); // The Round Table
-  console.log(mage.weapons); // Staff of Shamalama
-  console.log(archer.language); // Elvish
-  console.log(archer.greet()); // Lilith offers a greeting in Elvish.
-  console.log(mage.takeDamage()); // Bruce took damage.
-  console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
+  // console.log(mage.createdAt); // Today's date
+  // console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
+  // console.log(swordsman.healthPoints); // 15
+  // console.log(mage.name); // Bruce
+  // console.log(swordsman.team); // The Round Table
+  // console.log(mage.weapons); // Staff of Shamalama
+  // console.log(archer.language); // Elvish
+  // console.log(archer.greet()); // Lilith offers a greeting in Elvish.
+  // console.log(mage.takeDamage()); // Bruce took damage.
+  // console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
@@ -140,19 +159,88 @@ Humanoid.prototype.greet =  function(){
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
 
   function Villain(atr){
-    
-  } 
+    Humanoid.call(this, atr);
+  }
 
   Villain.prototype = Object.create(Humanoid.prototype);
 
-  function Hero(){
-    
+  function Hero(atr){
+    Humanoid.call(this, atr);
   }
 
+  Hero.prototype = Object.create(Humanoid.prototype);
+
   const yokai = new Villain({
-    
+    createdAt: new Date(),
+    dimensions: {
+      length: 1,
+      width: 2,
+      height: 4,
+    },
+    healthPoints: 50,
+    name: 'Yokai',
+    team: 'Anti Big Hero 6',
+    weapons: [
+      'Robots',
+      'Missiles',
+    ],
+    language: 'English',
   });
+
+  
 
   const hamada = new Hero({
-
+    createdAt: new Date(),
+    dimensions: {
+      length: 1,
+      width: 2,
+      height: 4,
+    },
+    healthPoints: 45,
+    name: 'Hiro',
+    team: 'Big Hero 6',
+    weapons: [
+      'Baymax',
+      'Dagger',
+    ],
+    language: 'English',
   });
+
+  function randomCrit (){
+    if(Math.floor(Math.random() * Math.floor(5)) === Math.floor(Math.random() * Math.floor(5))){
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  // console.log(yokai);
+  // console.log(hamada.healthPoints);
+  function fight(villain, hero){
+    let forceStop = 0;
+    while(hamada.healthPoints > 0 && yokai.healthPoints > 0 && forceStop < 100){
+      let dealTo = Math.floor(Math.random() * Math.floor(2));
+      let damage = Math.floor(Math.random() * Math.floor(11));
+      let criticalHit = randomCrit();
+      if(criticalHit){
+        critAmount =  Math.floor(Math.random() * Math.floor(5));
+        damage = (damage + 1) * critAmount;
+      }
+      forceStop = forceStop + damage;
+      if(dealTo === 1){
+        villain.dealDamage(villain.name, damage, criticalHit);
+        if(villain.healthPoints < 1){
+          console.log(hero.celebrate());
+        }
+      }
+      else{
+        hero.dealDamage(hero.name, damage, criticalHit);
+        if(hero.healthPoints < 1){
+          console.log(villain.celebrate());
+        }
+      }
+    }
+  }
+
+  fight(yokai,hamada);
