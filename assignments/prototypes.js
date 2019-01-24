@@ -49,15 +49,18 @@ CharacterStats.prototype.celebrate = function(){
 CharacterStats.prototype.dealDamage =  function(dealTo, amount, criticalHit){
   this.healthPoints = this.healthPoints - amount;
   if(this.healthPoints > 0){
-    if(criticalHit){
-      console.error(`${this.name} takes a critial hit ${amount} damage and has ${this.healthPoints} health left.`);
+    if(criticalHit && amount !== 0){
+      addRow(this.name, amount, this.healthPoints);
+      console.error(`Critical Hit: ${this.name} takes ${amount} damage and has ${this.healthPoints} health left.`);
     }
     else{
+      addRow(this.name, amount, this.healthPoints);
       console.log(`${this.name} takes ${amount} damage and has ${this.healthPoints} health left.`);
     }
   }
   else {
-    console.log(`${this.name} has died.`);
+    addRow(this.name, amount, "Die");
+    console.log(`${this.name} took ${amount} damage and has died.`);
   }
 }
 /*
@@ -224,8 +227,9 @@ Humanoid.prototype.greet =  function(){
       let damage = Math.floor(Math.random() * Math.floor(11));
       let criticalHit = randomCrit();
       if(criticalHit){
+        damage = damage + 3;
         critAmount =  Math.floor(Math.random() * Math.floor(5));
-        damage = (damage + 1) * critAmount;
+        damage = damage * critAmount;
       }
       forceStop = forceStop + damage;
       if(dealTo === 1){
@@ -244,3 +248,14 @@ Humanoid.prototype.greet =  function(){
   }
 
   fight(yokai,hamada);
+
+  function addRow(name, damage, health){
+    var table = document.getElementById("myTable");
+    var row = table.insertRow();
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    cell1.innerHTML = name + " was Attacked";
+    cell2.innerHTML = damage;
+    cell3.innerHTML = health;
+  }

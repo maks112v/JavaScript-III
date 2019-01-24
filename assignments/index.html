@@ -4,14 +4,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>JS III</title>
-
+  <style>
+    table {
+  width: 95%;
+  margin: 20px auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+table:hover {
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+td,th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+    tr:nth-child(odd) {
+  background-color: #FAFAFA;
+  transition: 0.1s;
+}
+tr:nth-child(odd):hover {
+  background-color: #B3E5FC;
+}
+tr:nth-child(even) {
+  background-color: #dddddd;
+  transition: 0.1s;
+}
+tr:nth-child(even):hover {
+  background-color: #29B6F6;
+}
+  </style>
   <!-- <script src="this.js"></script> -->
-  <script src="prototypes.js"></script>
+  
 </head>
 
 <body>
 <h1>JS III - Check your work in the console!</h1>
+<!-- <button onclick="fight(yokai,hamada);">Fight</button> -->
+  <table id="myTable">
+    <tr>
+      <th>Name</th>
+      <th>Damage Taken</th>
+      <th>Health Remaining</th>
+    </tr>
+  </table>
+  <script src="prototypes.js"></script>
 </body>
 </html>
