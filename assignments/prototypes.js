@@ -60,6 +60,7 @@ CharacterStats.prototype.dealDamage =  function(dealTo, amount, criticalHit){
   }
   else {
     addRow(this.name, amount, "Die");
+    this.alive = false;
     console.log(`${this.name} took ${amount} damage and has died.`);
   }
 }
@@ -78,6 +79,7 @@ function Humanoid(user){
   this.team = user.team;
   this.weapons = user.weapons;
   this.language = user.language;
+  this.alive = user.alive;
 }
 
 Humanoid.prototype = Object.create(CharacterStats.prototype);
@@ -188,6 +190,7 @@ Humanoid.prototype.greet =  function(){
       'Missiles',
     ],
     language: 'English',
+    alive: true,
   });
 
   
@@ -207,9 +210,10 @@ Humanoid.prototype.greet =  function(){
       'Dagger',
     ],
     language: 'English',
+    alive: true,
   });
 
-  function randomCrit (){
+  let randomCrit = () => {
     if(Math.floor(Math.random() * Math.floor(5)) === Math.floor(Math.random() * Math.floor(5))){
       return true;
     }
@@ -217,12 +221,9 @@ Humanoid.prototype.greet =  function(){
       return false;
     }
   }
-
-  // console.log(yokai);
-  // console.log(hamada.healthPoints);
+  
   function fight(villain, hero){
-    let forceStop = 0;
-    while(hamada.healthPoints > 0 && yokai.healthPoints > 0 && forceStop < 100){
+    while(hero.alive && villain.alive){
       let dealTo = Math.floor(Math.random() * Math.floor(2));
       let damage = Math.floor(Math.random() * Math.floor(11));
       let criticalHit = randomCrit();
@@ -231,7 +232,6 @@ Humanoid.prototype.greet =  function(){
         critAmount =  Math.floor(Math.random() * Math.floor(5));
         damage = damage * critAmount;
       }
-      forceStop = forceStop + damage;
       if(dealTo === 1){
         villain.dealDamage(villain.name, damage, criticalHit);
         if(villain.healthPoints < 1){
